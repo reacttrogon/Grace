@@ -72,6 +72,9 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
 
   let user_id = userId && userId !== "undefined" ? JSON.parse(userId) : null;
   let exam_id = examId && examId !== "undefined" ? JSON.parse(examId) : null;
+
+  user_id = 2
+  exam_id = 1583
   
   const resizeHandeler = () => {
     setIsMobile(window.innerWidth <= 800);
@@ -785,7 +788,7 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
         {/* Main Content */}
         <div
           className={`flex flex-1 overflow-hidden ${
-            currentQuestion?.is_attended === 1
+            currentQuestion?.explanation && currentQuestion.explanation.trim() !== ""
               ? "flex-col lg:flex-row"
               : "flex-col"
           } text-black rounded-lg`}
@@ -793,22 +796,16 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
           {currentQuestion?.type ? (
             <>
               {/* Responsive container: Column on mobile, Row on lg+ */}
-              <div className="flex flex-col w-full h-screen pb-[12.5rem] lg:flex-row lg:pb-0">
-                {/* Wrapper scroll only on lg+ */}
-                <div
-                  className={`w-full ${
-                    currentQuestion?.is_attended === 1 ? "lg:w-1/2" : ""
-                  } p-3 pr-0 lg:p-6 overflow-y-auto`}
+              <div className="flex flex-col w-full h-full lg:flex-row">
+                {/* Mobile: Single scrollable container for both explanation and question */}
+                <div className="flex flex-col w-full h-full overflow-y-auto lg:hidden"
                   style={{
-                    maxHeight: "calc(100vh - 160px)", // applies everywhere
+                    maxHeight: "calc(100vh - 160px)"
                   }}
                 >
-                  {/* Top Section: Question */}
-                  <div>{renderQuestion(currentQuestion)}</div>
-
-                  {/* Bottom Section: Explanation (shown inline on small screens) */}
-                  {currentQuestion?.is_attended === 1 && (
-                    <div className="pt-4 mt-6 border-t lg:mt-0 lg:border-t-0 lg:border-l lg:pt-0 lg:hidden">
+                  {/* Mobile Explanation - integrated into the page flow */}
+                  {currentQuestion?.explanation && currentQuestion.explanation.trim() !== "" && (
+                    <div className="p-3">
                       <h2 className="mb-2 font-bold">Explanation</h2>
 
                       {currentQuestion?.explanation_image?.trim() !== "" && (
@@ -822,20 +819,28 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
                       )}
 
                       <div
-                        className="custom-content"
+                        className="custom-content mb-6"
                         dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
                       />
                     </div>
                   )}
+
+                  {/* Mobile Question - flows naturally after explanation */}
+                  <div className="p-3">
+                    {renderQuestion(currentQuestion)}
+                  </div>
                 </div>
 
-                {/* On lg+ screens: Explanation shows in a split right section */}
-                {currentQuestion?.is_attended === 1 && (
+                {/* Desktop: Explanation shows on LEFT with scrolling (unchanged) */}
+                {currentQuestion?.explanation && currentQuestion.explanation.trim() !== "" && (
                   <div
-                    className="hidden w-1/2 p-6 overflow-y-auto border-l lg:block"
-                    style={{ maxHeight: "calc(100vh - 160px)" }}
+                    className="hidden w-1/2 p-6 overflow-y-auto border-r lg:block"
+                    style={{ 
+                      maxHeight: "calc(100vh - 160px)",
+                      height: "calc(100vh - 160px)"
+                    }}
                   >
-                    <h2 className="mb-2 font-bold">Explanation</h2>
+                    <h2 className="mb-2 font-bold sticky top-0 bg-white z-10 pb-2">Explanation</h2>
 
                     {currentQuestion?.explanation_image?.trim() !== "" && (
                       <div className="mt-3 mb-3">
@@ -853,6 +858,19 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
                     />
                   </div>
                 )}
+
+                {/* Desktop Question section - RIGHT side (unchanged) */}
+                <div
+                  className={`hidden lg:block ${
+                    currentQuestion?.explanation && currentQuestion.explanation.trim() !== "" ? "w-1/2" : "w-full"
+                  } p-6 overflow-y-auto`}
+                  style={{
+                    maxHeight: "calc(100vh - 160px)",
+                    height: "100%"
+                  }}
+                >
+                  {renderQuestion(currentQuestion)}
+                </div>
               </div>
             </>
           ) : (
