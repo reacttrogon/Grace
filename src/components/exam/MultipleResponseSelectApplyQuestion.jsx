@@ -29,7 +29,6 @@ const MultipleResponseSelectApplyQuestion = ({
     initialTime,
     handleButtonClick,
     formatTime,
-    isSubmittingAnswer,
   } = config;
 
   const handelChange = (e) => {
@@ -228,10 +227,8 @@ const MultipleResponseSelectApplyQuestion = ({
                     onChange(selectedOptions);
                     handelReviewClick();
                   }}
-                  disabled={isSubmittingAnswer}
-                  loading={isSubmittingAnswer}
                 >
-                  {isSubmittingAnswer ? "Submitting..." : "Submit"}
+                  Submit
                 </Button>
               </div>
             )}

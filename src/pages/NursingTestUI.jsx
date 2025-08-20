@@ -72,10 +72,9 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
 
   let user_id = userId && userId !== "undefined" ? JSON.parse(userId) : null;
   let exam_id = examId && examId !== "undefined" ? JSON.parse(examId) : null;
-
   user_id = 2
-  exam_id = 1583
-  
+  exam_id =1588
+
   const resizeHandeler = () => {
     setIsMobile(window.innerWidth <= 800);
   };
