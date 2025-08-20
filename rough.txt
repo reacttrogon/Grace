@@ -1,0 +1,117 @@
+ERROR - 2025-04 --> exam answer post data Array
+(
+    [user_id] => 2
+    [exam_id] => 593
+    [answers] => Array
+        (
+            [0] => Array
+                (
+                    [question_id] => 80
+                    [selected_answer] => 41
+                    [question_type] => multiple_choice
+                )
+
+            [1] => Array
+                (
+                    [question_id] => 82
+                    [selected_answer] => 48
+                    [question_type] => multiple_choice
+                )
+
+            [14] => Array
+                (
+                    [question_id] => 96
+                    [selected_answer] => Array
+                        (
+                            [0] => 107
+                            [1] => 106
+                            [2] => 105
+                            [3] => 104
+                        )
+
+                    [question_type] => multiple_response_select_apply
+                )
+
+            [16] => Array
+                (
+                    [question_id] => 98
+                    [selected_answer] => Array
+                        (
+                            [0] => 114
+                            [1] => 113
+                            [2] => 115
+                        )
+
+                    [question_type] => multiple_response_select_apply
+                )
+
+            [17] => Array
+                (
+                    [question_id] => 99
+                    [selected_answer] => Array
+                        (
+                            [0] => 114
+                            [1] => 113
+                            [2] => 115
+                            [3] => 118
+                            [4] => 119
+                            [5] => 120
+                        )
+
+                    [question_type] => multiple_response_select_apply
+                )
+
+            [18] => Array
+                (
+                    [question_id] => 102
+                    [selected_answer] => Array
+                    (
+                        [0] => Array
+                            (
+                                [blank_number] => 1
+                                [option] =>   Peptic ulcer disease 
+                            )
+
+                        [1] => Array
+                            (
+                                [blank_number] => 2
+                                [option] => Hydronephrosis
+                            )
+
+                    )
+
+                    [question_type] => fill_in_the_blank
+                )
+
+                [18] => Array
+                (
+                    [question_id] => 102
+                    [selected_answer] => Array
+                    (
+                        [0] => Array
+                            (
+                                [row_id] => 1
+                                [column_id] => 1
+                            )
+
+                        [1] => Array
+                            (
+                                [row_id] => 2
+                                [column_id] => 2
+                            )
+
+                        [2] => Array
+                            (
+                                [row_id] => 3
+                                [column_id] => 1
+                            )
+
+                    )
+                    
+                    [question_type] => matrix_multiple_choice
+                )
+                
+
+        )
+
+)

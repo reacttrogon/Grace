@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", serif;
+  font-style: normal;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* Hide scrollbar for all elements */
+html,
+body {
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Edge */
+}
+/* styles.css */
+.custom-content {
+  line-height: 30px;
+  list-style-type: square; /* Customize <li> bullet styles */
+  color: #333; /* Text color */
+  font-size: 16px; /* Font size */
+}
+
+.custom-content ul {
+  margin-left: 40px; /* Adjust <ul> margin */
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.custom-content li {
+  margin-bottom: 10px; /* Add spacing between <li> items */
+  list-style-type: initial;
+}
+
+.custom-html table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.custom-html th,
+.custom-html td {
+  border: 1px solid black;
+  padding: 8px;
+}
+
+.custom-html th {
+  background-color: #f5f5f5;
+}
+
+.custom-content table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.custom-content th,
+.custom-content td {
+  border: 1px solid black;
+  padding: 8px;
+}
+
+.custom-content th {
+  background-color: #f5f5f5;
+}
+
+@media (max-width: 780px) {
+  .custom-content ul {
+    margin-left: 6px; /* Adjust <ul> margin */
+    margin-top: 7px;
+    margin-bottom: 7px;
+  }
+}
+
+/* Global styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+.select-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+@media (max-width: 400px) {
+  select {
+    width: 300px;
+    background-color: red;
+  }
+
+  option {
+    width: 300px;
+  }
+}
+
+.radio-checked-green .ant-radio-checked .ant-radio-inner {
+  border-color: #52c41a !important;
+  background-color: #52c41a !important;
+}
+
+.radio-checked-red .ant-radio-checked .ant-radio-inner {
+  border-color: #f5222d !important;
+  background-color: #f5222d !important;
+}
+
+.radio-correct-answer .ant-radio-inner {
+  border-color: #52c41a !important;
+}
+
+.radio-checked-green .ant-radio-inner {
+  border-color: #52c41a !important;
+  background-color: #52c41a !important;
+}
+
+.radio-checked-red .ant-radio-inner {
+  border-color: #f5222d !important;
+  background-color: #f5222d !important;
+}
+
+.exam-section table {
+  width: 100%;
+  border-collapse: collapse; 
+  margin: 1rem 0;
+  font-size: 16px;
+  text-align: left;
+}
+
+.exam-section table th {
+  background-color: black;
+  padding: 10px;
+  border: 1px solid black;
+  font-weight: bold;
+}
+
+.exam-section table td {
+  padding: 10px;
+  border: 1px solid black;
+}

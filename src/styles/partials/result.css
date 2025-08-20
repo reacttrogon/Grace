@@ -1,0 +1,19 @@
+.radio-checked-green .ant-radio-checked .ant-radio-inner {
+  border-color: rgb(14, 172, 0) !important ;
+}
+
+.radio-checked-green .ant-radio-checked .ant-radio-inner:after {
+  background-color: rgb(14, 172, 0);
+}
+
+.radio-checked-green .ant-radio:hover .ant-radio-inner {
+  border-color: rgb(14, 172, 0);
+}
+
+.radio-checked-green .ant-radio-checked .ant-radio-inner:focus {
+  border-color: rgb(14, 172, 0);
+}
+
+.radio-checked-green .ant-radio-checked .ant-radio-inner {
+  background: transparent !important;
+}
