@@ -840,7 +840,7 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
                       height: "calc(100vh - 160px)"
                     }}
                   >
-                    <h2 className="mb-2 font-bold sticky top-0 bg-white z-10 pb-2">Explanation</h2>
+                    <h2 className="mb-2 font-bold  bg-white  pb-2">Explanation</h2>
 
                     {currentQuestion?.explanation_image?.trim() !== "" && (
                       <div className="mt-3 mb-3">
