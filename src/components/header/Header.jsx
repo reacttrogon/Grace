@@ -42,12 +42,8 @@ const Header = ({ config, currentQuestion }) => {
   // console.log("exam?.questions?",exam?.questions);
   
 
-  const QuestionsCount = exam?.questions?.reduce((count, question) => {
-    const parts = Array.isArray(question?.questions) ? question.questions : null; 
-    // console.log("parts",parts?.length);
-    
-    return count + (parts?.length || 1);
-  }, 0) || 0; 
+  const QuestionsCount = exam?.questions?.length; 
+ 
   // console.log("QueQuestionsCountstion ",QuestionsCount);
   
   
@@ -176,7 +172,7 @@ const Header = ({ config, currentQuestion }) => {
                 <HelpRoundedIcon />
               </span>
 
-              <h4 className="text-sm">{`${currentQuestionNumber > 0 ? currentQuestionNumber : 1} of ${questionCount || 1}`}</h4>
+              <h4 className="text-sm">{`${currentIndex + 1} of ${QuestionsCount}`}</h4>
             </div>
           </div>
         </div>

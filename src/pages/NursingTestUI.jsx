@@ -30,7 +30,7 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
   const [next, setNext] = useState(null);
 
   const [currentIndex, setCurrentIndex] = useState(
-    localStorage.getItem("currentIndex") || 0
+    parseInt(localStorage.getItem("currentIndex")) || 0
   ); // Track the current question index
   const [currentSubIndex, setCurrentSubIndex] = useState(0);
   // const [responses, setResponses] = useState({}); // Store user responses
@@ -72,6 +72,8 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
 
   let user_id = userId && userId !== "undefined" ? JSON.parse(userId) : null;
   let exam_id = examId && examId !== "undefined" ? JSON.parse(examId) : null;
+  user_id = 2;
+  exam_id = 1603;
 
   const resizeHandeler = () => {
     setIsMobile(window.innerWidth <= 800);
@@ -86,12 +88,10 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
     try {
       setIsLoadingQuestions(true);
       const response = await getQuestions(user_id, exam_id);
-      console.log("response", response.status);
-      
       // Validate response structure before setting state
       if (response?.data) {
         setExam(response.data);
-        
+
         // Check if questions array exists and is empty
         const questions = response.data?.exam?.questions;
         if (Array.isArray(questions) && questions.length === 0) {
@@ -116,8 +116,6 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
 
   useEffect(() => {
     getAllQuestion();
-    console.log("currentIndex at starting........", currentIndex);
-
     const startIndex = 0; // Calculate the next index
     setCurrentIndex(startIndex);
     localStorage.setItem("currentIndex", startIndex);
@@ -295,14 +293,17 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
   // console.log("exam?.questions?.[currentIndex]?.question_parts?.[0]?.is_nextgen",exam?.questions?.[currentIndex]?.question_parts?.[0]?.is_nextgen);
 
   let currentQuestion;
-  
+
   // Safely check if we have valid exam data and current index
-  if (!exam?.questions || !Array.isArray(exam.questions) || currentIndex >= exam.questions.length) {
-    console.log("Invalid exam data or index out of bounds");
+  if (
+    !exam?.questions ||
+    !Array.isArray(exam.questions) ||
+    currentIndex >= exam.questions.length
+  ) {
     currentQuestion = null;
   } else {
     const questionAtIndex = exam.questions[currentIndex];
-    
+
     if (questionAtIndex?.question_parts?.[0]?.is_nextgen === "1") {
       // NextGen question
       currentQuestion = questionAtIndex;
@@ -310,7 +311,10 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
       // Standard question with either 'question' or 'questions' property
       currentQuestion = questionAtIndex;
     } else {
-      console.log("Question at index has unexpected structure:", questionAtIndex);
+      console.log(
+        "Question at index has unexpected structure:",
+        questionAtIndex
+      );
       currentQuestion = null;
     }
   }
@@ -574,6 +578,10 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
 
     try {
       setIsSubmittingExam(true);
+      console.log(postData)
+      if (postData.length=== 0) {
+        alert("Select alteast one answer to submit");
+      }
       const response = await axios.post(
         `https://co-tutorlearning.com/api/Nclex_exam/submit_exam_answers`,
         { user_id, exam_id, answers: postData }
@@ -785,7 +793,8 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
         {/* Main Content */}
         <div
           className={`flex flex-1 overflow-hidden ${
-            currentQuestion?.explanation && currentQuestion.explanation.trim() !== ""
+            currentQuestion?.explanation &&
+            currentQuestion.explanation.trim() !== ""
               ? "flex-col lg:flex-row"
               : "flex-col"
           } text-black rounded-lg`}
@@ -795,15 +804,52 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
               {/* Responsive container: Column on mobile, Row on lg+ */}
               <div className="flex flex-col w-full h-full lg:flex-row">
                 {/* Mobile: Single scrollable container for both explanation and question */}
-                <div className="flex flex-col w-full h-full overflow-y-auto lg:hidden"
+                <div
+                  className="flex flex-col w-full h-full overflow-y-auto lg:hidden"
                   style={{
-                    maxHeight: "calc(100vh - 160px)"
+                    maxHeight: "calc(100vh - 160px)",
                   }}
                 >
                   {/* Mobile Explanation - integrated into the page flow */}
-                  {currentQuestion?.explanation && currentQuestion.explanation.trim() !== "" && (
-                    <div className="p-3">
-                      <h2 className="mb-2 font-bold">Explanation</h2>
+                  {currentQuestion?.explanation &&
+                    currentQuestion.explanation.trim() !== "" && (
+                      <div className="p-3">
+                        <h2 className="mb-2 font-bold">Explanation</h2>
+
+                        {currentQuestion?.explanation_image?.trim() !== "" && (
+                          <div className="mt-3 mb-3">
+                            <img
+                              src={currentQuestion?.explanation_image}
+                              className="w-64 md:w-96"
+                              alt="Explanation"
+                            />
+                          </div>
+                        )}
+
+                        <div
+                          className="custom-content mb-6"
+                          dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+                        />
+                      </div>
+                    )}
+
+                  {/* Mobile Question - flows naturally after explanation */}
+                  <div className="p-3">{renderQuestion(currentQuestion)}</div>
+                </div>
+
+                {/* Desktop: Explanation shows on LEFT with scrolling (unchanged) */}
+                {currentQuestion?.explanation &&
+                  currentQuestion.explanation.trim() !== "" && (
+                    <div
+                      className="hidden w-1/2 p-6 overflow-y-auto border-r lg:block"
+                      style={{
+                        maxHeight: "calc(100vh - 160px)",
+                        height: "calc(100vh - 160px)",
+                      }}
+                    >
+                      <h2 className="mb-2 font-bold  bg-white  pb-2">
+                        Explanation
+                      </h2>
 
                       {currentQuestion?.explanation_image?.trim() !== "" && (
                         <div className="mt-3 mb-3">
@@ -816,54 +862,23 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
                       )}
 
                       <div
-                        className="custom-content mb-6"
+                        className="custom-content"
                         dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
                       />
                     </div>
                   )}
 
-                  {/* Mobile Question - flows naturally after explanation */}
-                  <div className="p-3">
-                    {renderQuestion(currentQuestion)}
-                  </div>
-                </div>
-
-                {/* Desktop: Explanation shows on LEFT with scrolling (unchanged) */}
-                {currentQuestion?.explanation && currentQuestion.explanation.trim() !== "" && (
-                  <div
-                    className="hidden w-1/2 p-6 overflow-y-auto border-r lg:block"
-                    style={{ 
-                      maxHeight: "calc(100vh - 160px)",
-                      height: "calc(100vh - 160px)"
-                    }}
-                  >
-                    <h2 className="mb-2 font-bold  bg-white  pb-2">Explanation</h2>
-
-                    {currentQuestion?.explanation_image?.trim() !== "" && (
-                      <div className="mt-3 mb-3">
-                        <img
-                          src={currentQuestion?.explanation_image}
-                          className="w-64 md:w-96"
-                          alt="Explanation"
-                        />
-                      </div>
-                    )}
-
-                    <div
-                      className="custom-content"
-                      dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
-                    />
-                  </div>
-                )}
-
                 {/* Desktop Question section - RIGHT side (unchanged) */}
                 <div
                   className={`hidden lg:block ${
-                    currentQuestion?.explanation && currentQuestion.explanation.trim() !== "" ? "w-1/2" : "w-full"
+                    currentQuestion?.explanation &&
+                    currentQuestion.explanation.trim() !== ""
+                      ? "w-1/2"
+                      : "w-full"
                   } p-6 overflow-y-auto`}
                   style={{
                     maxHeight: "calc(100vh - 160px)",
-                    height: "100%"
+                    height: "100%",
                   }}
                 >
                   {renderQuestion(currentQuestion)}
@@ -951,16 +966,12 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
             {/* {console.log("questionCount",questionCount)} */}
             {/* {console.log("questionCount - 1 ",questionCount - 1 )}  */}
 
-            {questionNo === questionCount ? (
-              ""
-            ) : (
+            {Number(currentIndex) < QuestionCount - 1 && (
               <>
                 <Button
                   className="flex items-center justify-center w-full gap-2 text-white bg-blue-700 sm:w-auto"
                   onClick={handleNext}
-                  disabled={
-                    currentIndex === questionCount - 1 || isSubmittingAnswer
-                  }
+                  disabled={isSubmittingAnswer}
                   loading={isSubmittingAnswer}
                 >
                   {isSubmittingAnswer ? "Submitting..." : "Next"}{" "}
@@ -977,7 +988,7 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
             {console.log("currentIndex",currentIndex)}
             {console.log("questionCount",questionCount-1)} */}
 
-            {questionNo === questionCount && (
+            {Number(currentIndex) === QuestionCount - 1 && (
               <div className="w-full sm:w-auto">
                 <Button
                   className="flex items-center w-full gap-2 text-white bg-blue-700 sm:w-auto"
