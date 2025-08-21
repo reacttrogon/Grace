@@ -80,10 +80,6 @@ const NursingTestUI = ({ userId, examId, questionType, timeDataObje }) => {
   let exam_id = examId && examId !== "undefined" ? JSON.parse(examId) : getURLParam("exam_id");
   let question_type = getURLParam("question_type");
   
-  user_id = 2;
-  exam_id = 1617;
-  question_type= 2
-  
   const resizeHandeler = () => {
     setIsMobile(window.innerWidth <= 800);
   };
@@ -972,7 +968,10 @@ const NursingTestUI = ({ userId, examId, questionType, timeDataObje }) => {
             {/* {console.log("questionCount",questionCount)} */}
             {/* {console.log("questionCount - 1 ",questionCount - 1 )}  */}
 
-            {Number(currentIndex) < QuestionCount - 1 && (
+            {(Number(currentIndex) < QuestionCount - 1 || 
+             (Number(currentIndex) === QuestionCount - 1 && 
+              exam?.questions?.[currentIndex]?.questions?.length > 0 &&
+              currentSubIndex < exam?.questions?.[currentIndex]?.questions?.length - 1)) && (
               <>
                 <Button
                   className="flex items-center justify-center w-full gap-2 text-white bg-blue-700 sm:w-auto"
@@ -994,7 +993,10 @@ const NursingTestUI = ({ userId, examId, questionType, timeDataObje }) => {
             {console.log("currentIndex",currentIndex)}
             {console.log("questionCount",questionCount-1)} */}
 
-            {Number(currentIndex) === QuestionCount - 1 && (
+            {Number(currentIndex) === QuestionCount - 1 && 
+             (!exam?.questions?.[currentIndex]?.questions || 
+              exam?.questions?.[currentIndex]?.questions?.length === 0 ||
+              currentSubIndex >= exam?.questions?.[currentIndex]?.questions?.length - 1) && (
               <div className="w-full sm:w-auto">
                 <Button
                   className="flex items-center w-full gap-2 text-white bg-blue-700 sm:w-auto"
