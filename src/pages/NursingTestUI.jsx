@@ -26,7 +26,7 @@ import EndExamModal from "../components/PopupsEnd/EndExamModal";
 import TimeOut from "../components/PopupsEnd/TimeOut";
 import { useAppContext } from "../context";
 
-const NursingTestUI = ({ userId, examId, timeDataObje }) => {
+const NursingTestUI = ({ userId, examId, questionType, timeDataObje }) => {
   const [next, setNext] = useState(null);
 
   const [currentIndex, setCurrentIndex] = useState(
@@ -70,11 +70,20 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
   const objRef = useRef();
   const navigate = useNavigate();
 
-  let user_id = userId && userId !== "undefined" ? JSON.parse(userId) : null;
-  let exam_id = examId && examId !== "undefined" ? JSON.parse(examId) : null;
-  user_id = 2;
-  exam_id = 1603;
+  // Dynamically get URL parameters
+  const getURLParam = (param) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+  };
 
+  let user_id = userId && userId !== "undefined" ? JSON.parse(userId) : getURLParam("user_id");
+  let exam_id = examId && examId !== "undefined" ? JSON.parse(examId) : getURLParam("exam_id");
+  let question_type = getURLParam("question_type");
+  
+  user_id = 2;
+  exam_id = 1617;
+  question_type= 2
+  
   const resizeHandeler = () => {
     setIsMobile(window.innerWidth <= 800);
   };
@@ -579,12 +588,9 @@ const NursingTestUI = ({ userId, examId, timeDataObje }) => {
     try {
       setIsSubmittingExam(true);
       console.log(postData)
-      if (postData.length=== 0) {
-        alert("Select alteast one answer to submit");
-      }
       const response = await axios.post(
         `https://co-tutorlearning.com/api/Nclex_exam/submit_exam_answers`,
-        { user_id, exam_id, answers: postData }
+        { user_id, exam_id, question_type: question_type, answers: postData }
       );
       if (response?.data?.status) {
         message.success(response?.data?.message);

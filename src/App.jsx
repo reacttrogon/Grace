@@ -11,10 +11,13 @@ const App = () => {
     const userId = params.get("user_id")?.replace(/^"|"$/g, ""); // Remove leading and trailing quotes if they exist
 
     // Extract the 'language' parameter
-    const examId = params.get("exam_id");    
-    return { userId, examId }; // Return both values as an object
+    const examId = params.get("exam_id");
+    
+    // Extract the 'question_type' parameter
+    const questionType = params.get("question_type");
+    return { userId, examId, questionType }; // Return both values as an object
   };
-  const { userId, examId } = getParamsFromURL();
+  const { userId, examId, questionType } = getParamsFromURL();
   const [currentSeconds, setCurrentSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [lastIntervalTime, setLastIntervalTime] = useState(0);
@@ -87,6 +90,7 @@ const App = () => {
           <NursingTestUI
             userId={userId}
             examId={examId}
+            questionType={questionType}
             timeDataObje={timeDataObj}
           />
         }
