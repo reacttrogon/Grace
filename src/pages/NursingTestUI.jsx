@@ -54,7 +54,7 @@ const NursingTestUI = ({ userId, examId, questionType, timeDataObje }) => {
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(false);
   const [isSubmittingAnswer, setIsSubmittingAnswer] = useState(false);
   const [isSubmittingExam, setIsSubmittingExam] = useState(false);
-
+  const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false); // Reintroduced state
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
   const [pressNextButton, setPressButton] = useState(false);
 
@@ -79,7 +79,10 @@ const NursingTestUI = ({ userId, examId, questionType, timeDataObje }) => {
   let user_id = userId && userId !== "undefined" ? JSON.parse(userId) : getURLParam("user_id");
   let exam_id = examId && examId !== "undefined" ? JSON.parse(examId) : getURLParam("exam_id");
   let question_type = getURLParam("question_type");
-  
+  // user_id = 2
+  // exam_id = 1665
+  // question_type= 1
+
   const resizeHandeler = () => {
     setIsMobile(window.innerWidth <= 800);
   };
@@ -280,7 +283,7 @@ const NursingTestUI = ({ userId, examId, questionType, timeDataObje }) => {
       if (response?.data?.status) {
         stopTimer();
         getAllQuestion();
-
+        setIsAnswerSubmitted(true); // Set true after successful submission
         return response; // Return the response after success
       }
       return null; // Return null if the response is not successful
@@ -325,6 +328,7 @@ const NursingTestUI = ({ userId, examId, questionType, timeDataObje }) => {
   }
 
   const handleNext = async (data, key) => {
+    setIsAnswerSubmitted(false); // Hide explanation when moving to next question
     // console.log("ths is from next function ");
 
     const currentQuestion = exam?.questions[currentIndex];
@@ -391,6 +395,7 @@ const NursingTestUI = ({ userId, examId, questionType, timeDataObje }) => {
   };
 
   const handlePrevious = () => {
+    setIsAnswerSubmitted(false); // Hide explanation when moving to previous question
     if (currentSubIndex > 0) {
       const nextInnerQuestionIndex = currentSubIndex - 1;
       setCurrentSubIndex(nextInnerQuestionIndex);
@@ -631,6 +636,7 @@ const NursingTestUI = ({ userId, examId, questionType, timeDataObje }) => {
       question,
       selectedValue: responses[id]?.answer || null,
       onChange: (value) => handleAnswerChange(id, value, type),
+      isAnswerSubmitted: isAnswerSubmitted,
     };
 
     switch (type) {
@@ -814,7 +820,8 @@ const NursingTestUI = ({ userId, examId, questionType, timeDataObje }) => {
                 >
                   {/* Mobile Explanation - integrated into the page flow */}
                   {currentQuestion?.explanation &&
-                    currentQuestion.explanation.trim() !== "" && (
+                    currentQuestion.explanation.trim() !== "" &&
+                    isAnswerSubmitted && (
                       <div className="p-3">
                         <h2 className="mb-2 font-bold">Explanation</h2>
 
@@ -839,11 +846,28 @@ const NursingTestUI = ({ userId, examId, questionType, timeDataObje }) => {
                   <div className="p-3">{renderQuestion(currentQuestion)}</div>
                 </div>
 
-                {/* Desktop: Explanation shows on LEFT with scrolling (unchanged) */}
+                {/* Desktop: Question shows on LEFT with scrolling */}
+                <div
+                  className={`hidden lg:block ${
+                    currentQuestion?.explanation &&
+                    currentQuestion.explanation.trim() !== ""
+                      ? "w-1/2"
+                      : "w-full"
+                  } p-6 overflow-y-auto`}
+                  style={{
+                    maxHeight: "calc(100vh - 160px)",
+                    height: "100%",
+                  }}
+                >
+                  {renderQuestion(currentQuestion)}
+                </div>
+
+                {/* Desktop: Explanation shows on RIGHT with scrolling */}
                 {currentQuestion?.explanation &&
-                  currentQuestion.explanation.trim() !== "" && (
+                  currentQuestion.explanation.trim() !== "" &&
+                  isAnswerSubmitted && (
                     <div
-                      className="hidden w-1/2 p-6 overflow-y-auto border-r lg:block"
+                      className="hidden w-1/2 p-6 overflow-y-auto border-l lg:block"
                       style={{
                         maxHeight: "calc(100vh - 160px)",
                         height: "calc(100vh - 160px)",
@@ -869,22 +893,6 @@ const NursingTestUI = ({ userId, examId, questionType, timeDataObje }) => {
                       />
                     </div>
                   )}
-
-                {/* Desktop Question section - RIGHT side (unchanged) */}
-                <div
-                  className={`hidden lg:block ${
-                    currentQuestion?.explanation &&
-                    currentQuestion.explanation.trim() !== ""
-                      ? "w-1/2"
-                      : "w-full"
-                  } p-6 overflow-y-auto`}
-                  style={{
-                    maxHeight: "calc(100vh - 160px)",
-                    height: "100%",
-                  }}
-                >
-                  {renderQuestion(currentQuestion)}
-                </div>
               </div>
             </>
           ) : (
